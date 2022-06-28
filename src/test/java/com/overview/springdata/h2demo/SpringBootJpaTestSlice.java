@@ -11,9 +11,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.Commit;
 
-import com.overview.springdata.h2demo.domain.Address;
-import com.overview.springdata.h2demo.repo.AddressRepository;
-import com.overview.springdata.h2demo.repo.EmployeeRepository;
+import com.overview.springdata.h2demo.domain.User;
+import com.overview.springdata.h2demo.domain.UserProfile;
+import com.overview.springdata.h2demo.repo.UserProfileRepo;
+import com.overview.springdata.h2demo.repo.UserRepo;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
@@ -21,44 +22,35 @@ import com.overview.springdata.h2demo.repo.EmployeeRepository;
 class SpringBootJpaTestSlice {
 
 	@Autowired
-	EmployeeRepository employeeRepo;
+	UserRepo userRepo;
 	
 	@Autowired
-	AddressRepository addressRepo;
+	UserProfileRepo userProfileRepo;
 	
 //	@Rollback(value = false)
-	@Commit
+//	@Commit
 	@Order(1)
 	@Test
-	void testJpaTestSlice() {
+	void testUserRepo01() {
+		System.out.println("------------------testUserRepo01--------------------");
+		List<User> users = userRepo.findByUsername("nhut.pham");
+		User user = users.get(0);
+		String username = user.getUsername();
+		System.out.println("username:: " + username);
 		
-		System.out.println("------------------testJpaTestSlice--------------------");
-		
-//		List<Employee> employees = employeeRepo.findByFirstName("Nhut");
-//		Employee employee = employees.get(0);
-//		Address address = employee.getAddress();
-//		System.out.println(address.getStreet());
-		
-		
-//		employees.forEach(emp -> {
-//			System.out.println(emp.getFirstName());
-//		});
-//		
-		List<Address> addresses = addressRepo.findByCity("HCM");
-//		
-		addresses.get(0).getEmployee().getFirstName();
-//		addresses.forEach(address -> {
-//			System.out.println(address.getStreet());
-//		});
-		
-
-//		System.out.println("data:: " + employee.getFirstName() + " - street:: " + address.getStreet());
+		System.out.println("------------------testUserRepo01--------------------");
+		System.out.println("address::" + user.getUserProfile().getAddress());
 	}
 
-//	@Order(2)
-//	@Test
-//	void testJpaTestSliceTransaction() {
-//		long countBefore = this.bookRepo.count();
-//		assertThat(countBefore).isEqualTo(3);
-//	}
+	@Order(2)
+	@Test
+	void testUserProfileRepo01() {
+		System.out.println("------------------testUserProfileRepo01--------------------");
+		List<UserProfile> userProfiles = userProfileRepo.findByFirstName("Nhut");
+		UserProfile up = userProfiles.get(0);
+		System.out.println("address:: " + up.getAddress());
+		
+		System.out.println("------------------testUserProfileRepo01--------------------");
+		System.out.println("username:: " + up.getUser().getUsername());
+	}
 }

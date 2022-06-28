@@ -1,6 +1,5 @@
 package com.overview.springdata.h2demo.domain;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,8 +10,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "employee")
-public class Employee {
+@Table(name = "user_profile")
+public class UserProfile {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,17 +19,25 @@ public class Employee {
 
 	private String firstName;
 	private String lastName;
+	private String address;
 
-	private Integer age;
+	@OneToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "fk_user_id")
+	private User user;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "fk_add_id", referencedColumnName = "id")
-	private Address address;
-	
+	public UserProfile() {
+	}
+
+	public UserProfile(String firstName, String lastName, String address) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.address = address;
+	}
+
 	public Long getId() {
 		return id;
 	}
- 
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -51,19 +58,20 @@ public class Employee {
 		this.lastName = lastName;
 	}
 
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
-	public Address getAddress() {
+	public String getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(String address) {
 		this.address = address;
 	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 }
