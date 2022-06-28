@@ -1,37 +1,33 @@
 package com.overview.springdata.h2demo.bootstrap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.overview.springdata.h2demo.domain.Book;
-import com.overview.springdata.h2demo.repo.BookRepository;
+import com.overview.springdata.h2demo.domain.Address;
+import com.overview.springdata.h2demo.domain.Employee;
+import com.overview.springdata.h2demo.repo.EmployeeRepository;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
 
-	private final BookRepository bookRepository;
+	@Autowired
+	private EmployeeRepository employeeRepo;
 
-	public DataInitializer(BookRepository bookRepository) {
-		this.bookRepository = bookRepository;
+	public DataInitializer() {
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		Book bookDDD = new Book("Domain Driven Design", "123", "RandomHouse");
-
-		System.out.println("Id: " + bookDDD.getId());
-
-		Book savedDDD = bookRepository.save(bookDDD);
-
-		System.out.println("Id: " + savedDDD.getId());
-
-		Book bookSIA = new Book("Spring In Action", "234234", "Oriely");
-		Book savedSIA = bookRepository.save(bookSIA);
-
-		bookRepository.findAll().forEach(book -> {
-			System.out.println("Book Id: " + book.getId());
-			System.out.println("Book Title: " + book.getTitle());
-		});
-
+		Employee emp = new Employee();
+		emp.setFirstName("Nhut");
+		emp.setLastName("Pham");
+		emp.setAge(32);
+		Address address = new Address();
+		address.setStreet("TVQ");
+		address.setAddressType("home");
+		address.setCity("HCM");
+		emp.setAddress(address);
+		employeeRepo.save(emp);
 	}
 }
