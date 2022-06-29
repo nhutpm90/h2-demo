@@ -1,5 +1,6 @@
 package com.overview.springdata.h2demo;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.MethodOrderer;
@@ -9,11 +10,12 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
-import com.overview.springdata.h2demo.domain.Cart;
-import com.overview.springdata.h2demo.domain.Item;
-import com.overview.springdata.h2demo.repo.CartRepo;
-import com.overview.springdata.h2demo.repo.ItemRepo;
+import com.overview.springdata.h2demo.domain.Employee;
+import com.overview.springdata.h2demo.repo.EmployeeRepo;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
@@ -21,38 +23,60 @@ import com.overview.springdata.h2demo.repo.ItemRepo;
 class SpringBootJpaTestSlice {
 
 	@Autowired
-	CartRepo cartRepo;
-	
-	@Autowired
-	ItemRepo itemRepo;
+	EmployeeRepo employeeRepo;
 	
 //	@Rollback(value = false)
 //	@Commit
 	@Order(1)
 	@Test
-	void testCartRepo01() {
-		System.out.println("------------------start testCartRepo01--------------------");
-		List<Cart> carts = this.cartRepo.findByName("C001");
-		Cart cart = carts.get(0);
-		System.out.println("cart:: name:: " + cart.getName());
+	void testEmployeeRepo01() {
+		System.out.println("------------------start testEmployeeRepo01--------------------");
 		
-		List<Item> items = cart.getItems();
-		items.forEach(item -> {
-			System.out.println(cart.getName() + " --> " + item.getSerialNumber());
-		});
-		System.out.println("------------------end testCartRepo01--------------------");
+		System.out.println("------------------findByFirstName");
+		List<Employee> employeesByFirstName = this.employeeRepo.findByFirstName("Irene");
+		System.out.println("findByFirstName:: size:: " + employeesByFirstName.size() + " - data:: " + employeesByFirstName);
+		
+		System.out.println("------------------findByEmail");
+		Employee findByEmail = this.employeeRepo.findByEmail("jbeagles1@bizjournals.com");
+		System.out.println("findByEmail:: " + findByEmail);
+		
+		System.out.println("------------------findByLastNameLike");
+		List<Employee> employeesByLastName = this.employeeRepo.findByLastNameLike("%nn%");
+		System.out.println("findByLastNameLike:: size:: " + employeesByLastName.size() + " - data:: " + employeesByLastName);
+		
+		System.out.println("------------------findByIdIn");
+		List<Long> employeeIds = Arrays.asList(1L, 2L, 3L);
+		List<Employee> employeesByIds = this.employeeRepo.findByIdIn(employeeIds);
+		System.out.println("findByIdIn:: size:: " + employeesByIds.size() + " - data:: " + employeesByIds);
+		System.out.println("------------------end testEmployeeRepo01--------------------");
 	}
 
 	@Order(2)
 	@Test
-	void testItemRepo01() {
-		System.out.println("------------------start testItemRepo01--------------------");
-		List<Item> items = this.itemRepo.findBySerialNumber("S003");
-		Item item = items.get(0);
-		System.out.println("item:: serialNumber" + item.getSerialNumber());
+	void testEmployeeRepo02() {
+		System.out.println("------------------start testEmployeeRepo01--------------------");
 		
-		Cart cart = item.getCart();
-		System.out.println("cart:: name:: " + cart.getName());
-		System.out.println("------------------end testItemRepo01--------------------");
+		System.out.println("------------------findAll with PageRequest");
+		PageRequest pageRequest = PageRequest.of(1, 5);
+		Page<Employee> employees = this.employeeRepo.findAll(pageRequest);
+		List<Employee> content = employees.getContent();
+		System.out.println("findAll with PageRequest:: size:: " + content.size() + " - data:: " + content);
+		System.out.println("findAll with PageRequest:: employees:: " + employees);
+		
+		System.out.println("------------------findAll with Sort");
+		Sort sort = Sort.by(Sort.Direction.DESC, "firstName");
+		pageRequest = PageRequest.of(2, 5, sort);
+		employees = this.employeeRepo.findAll(pageRequest);
+		content = employees.getContent();
+		System.out.println("findAll with Sort:: size:: " + content.size() + " - data:: " + content);
+		System.out.println("findAll with Sort:: employees:: " + employees);
+		
+		
+		System.out.println("------------------findByLastNameLike Paging");
+		List<Employee> employeesByLastName = this.employeeRepo.findByLastNameLike("%nn%", 
+				PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "firstName")));
+		System.out.println("findByLastNameLike Paging:: size:: " + employeesByLastName.size() + " - data:: " + employeesByLastName);
+		
+		System.out.println("------------------end testEmployeeRepo01--------------------");
 	}
 }
