@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 
-import com.overview.springdata.h2demo.domain.Customer;
-import com.overview.springdata.h2demo.domain.PhoneNumber;
-import com.overview.springdata.h2demo.repo.CustomerRepo;
+import com.overview.springdata.h2demo.domain.Programmer;
+import com.overview.springdata.h2demo.domain.Project;
+import com.overview.springdata.h2demo.repo.ProgrammerRepo;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
@@ -20,28 +20,22 @@ import com.overview.springdata.h2demo.repo.CustomerRepo;
 class SpringBootJpaTestSlice {
 
 	@Autowired
-	CustomerRepo customerRepo;
+	ProgrammerRepo programmerRepo;
 	
 //	@Rollback(value = false)
 //	@Commit
 	@Order(1)
 	@Test
-	void testCustomerRepo01() {
-		System.out.println("------------------start testCustomerRepo01--------------------");
+	void testProgrammerRepo01() {
+		System.out.println("------------------start testProgrammerRepo01--------------------");
 		
-		System.out.println("------------------start testGetById--------------------");
-		Customer customer = customerRepo.getById(1L);
-		Set<PhoneNumber> phoneNumbers = customer.getPhoneNumbers();
-		phoneNumbers.forEach(phoneNumber -> System.out.println(phoneNumber));
+		Programmer programmer = programmerRepo.getById(1L);
+		System.out.println(programmer);
 		
-		System.out.println("------------------start testUpdate--------------------");
-		customer.setName("Rango");
-		phoneNumbers.forEach(phoneNumber -> {
-			phoneNumber.setType("home");
-		});
-		this.customerRepo.saveAndFlush(customer);
+		Set<Project> projects = programmer.getProjects();
+		projects.forEach(project -> System.out.println(project));
 		
-		System.out.println("------------------end testCustomerRepo01--------------------");
+		System.out.println("------------------end testProgrammerRepo01--------------------");
 	}
 
 	@Order(2)
