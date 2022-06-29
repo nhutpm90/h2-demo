@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import com.overview.springdata.h2demo.domain.Employee;
@@ -54,7 +55,7 @@ class SpringBootJpaTestSlice {
 	@Order(2)
 	@Test
 	void testEmployeeRepo02() {
-		System.out.println("------------------start testEmployeeRepo01--------------------");
+		System.out.println("------------------start testEmployeeRepo02--------------------");
 		
 		System.out.println("------------------findAll with PageRequest");
 		PageRequest pageRequest = PageRequest.of(1, 5);
@@ -77,6 +78,42 @@ class SpringBootJpaTestSlice {
 				PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "firstName")));
 		System.out.println("findByLastNameLike Paging:: size:: " + employeesByLastName.size() + " - data:: " + employeesByLastName);
 		
-		System.out.println("------------------end testEmployeeRepo01--------------------");
+		System.out.println("------------------end testEmployeeRepo02--------------------");
+	}
+	
+	@Order(3)
+	@Test
+	void testEmployeeRepo03() {
+		System.out.println("------------------start testEmployeeRepo03--------------------");
+		
+		System.out.println("------------------findAllEmployee");
+		List<Employee> employees = this.employeeRepo.findAllEmployee();
+		System.out.println("findAllEmployee:: size:: " + employees.size() + " - data:: " + employees);
+		
+		System.out.println("------------------findAllEmployeePartialData");
+		List<Object[]> employees1 = this.employeeRepo.findAllEmployeePartialData();
+		employees1.forEach(objs -> {
+			System.out.println("employee:: firstName:: " + objs[0] + " - lastName:: " + objs[1]);
+		});
+		
+		System.out.println("------------------findEmployee");
+		employees = this.employeeRepo.findEmployee("Edward");
+		System.out.println("findEmployee:: size:: " + employees.size() + " - data:: " + employees);
+		
+		System.out.println("------------------findEmployeeByGender");
+		employees = this.employeeRepo.findEmployeeByGender("Male", PageRequest.of(0, 3));
+		System.out.println("findEmployeeByGender:: size:: " + employees.size() + " - data:: " + employees);
+		
+		System.out.println("------------------findEmployeeByEmail");
+		Employee emp = this.employeeRepo.findEmployeeByEmail("wmorfield4@nih.gov");
+		System.out.println("findEmployeeByEmail:: emp:: " + emp);
+		
+		System.out.println("------------------deleteEmployee");
+		this.employeeRepo.deleteEmployee("Edward");
+		System.out.println("------------------end testEmployeeRepo03--------------------");
+		
+		System.out.println("------------------findByCountry");
+		employees = this.employeeRepo.findByAddressCountry("Vietnam");
+		System.out.println("findByCountry:: employees:: " + employees);
 	}
 }

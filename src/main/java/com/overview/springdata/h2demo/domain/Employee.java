@@ -2,6 +2,7 @@ package com.overview.springdata.h2demo.domain;
 
 import java.sql.Date;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,6 +30,9 @@ public class Employee {
 	private Boolean active;
 
 	private String phoneNumber;
+	
+	@Embedded
+	private Address address;
 
 	public Long getId() {
 		return id;
@@ -94,4 +98,10 @@ public class Employee {
 		this.phoneNumber = phoneNumber;
 	}
 
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", gender=" + gender + ", dob=" + dob + ", active=" + active + ", phoneNumber=" + phoneNumber
+				+ ", address=" + address + "]";
+	}
 }
