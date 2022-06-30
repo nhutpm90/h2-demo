@@ -1,19 +1,15 @@
 package com.overview.springdata.h2demo.domain;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "project")
-public class Project {
+@Table(name = "person")
+public class Person {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,14 +17,14 @@ public class Project {
 
 	private String name;
 
-	@ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
-	private Set<Programmer> programmers = new HashSet<>();
+	@OneToOne(mappedBy = "person")
+	private License license;
 
-	public Project() {
+	public Person() {
 		super();
 	}
 
-	public Project(String name) {
+	public Person(String name) {
 		super();
 		this.name = name;
 	}
@@ -49,16 +45,17 @@ public class Project {
 		this.name = name;
 	}
 
-	public Set<Programmer> getProgrammers() {
-		return programmers;
+	public License getLicense() {
+		return license;
 	}
 
-	public void setProgrammers(Set<Programmer> programmers) {
-		this.programmers = programmers;
+	public void setLicense(License license) {
+		this.license = license;
 	}
 
 	@Override
 	public String toString() {
-		return "Project [id=" + id + ", name=" + name + "]";
+		return "Person [id=" + id + ", name=" + name + "]";
 	}
+
 }

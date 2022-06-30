@@ -1,32 +1,34 @@
 package com.overview.springdata.h2demo.bootstrap;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.overview.springdata.h2demo.domain.Programmer;
-import com.overview.springdata.h2demo.domain.Project;
-import com.overview.springdata.h2demo.repo.ProgrammerRepo;
+import com.overview.springdata.h2demo.domain.License;
+import com.overview.springdata.h2demo.domain.Person;
+import com.overview.springdata.h2demo.repo.LicenseRepo;
 
 
 @Component
 public class DataInitializer implements CommandLineRunner {
 
 	@Autowired
-	ProgrammerRepo programmerRepo;
+	LicenseRepo licenseRepo;
 	
-
 	public DataInitializer() {
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
 		
-		Programmer programmer = new Programmer("Nhut Pham", 1000L);
-		programmer.addProject(new Project("Java"));
-		programmer.addProject(new Project("Hibernate"));
+		Person person = new Person("Nhut Pham");
 
-		this.programmerRepo.save(programmer);
+		License license = new License("driving", new Date(), new Date());
+		license.setPerson(person);
+		
+		this.licenseRepo.save(license);
 	}
 }
 
